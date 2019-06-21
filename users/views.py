@@ -5,7 +5,7 @@ from users.serializers import UserSerializer, User
 
 class UserViewSet(viewsets.ModelViewSet):
     """
-        A generic Viewset for Users
+    API endpoint that allows users to be viewed or edited.
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
