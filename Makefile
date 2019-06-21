@@ -44,7 +44,7 @@ build:
 
 remove.volumes::
 	docker-compose down
-	docker volume rm integrati-api_postgres_data
+	docker volume rm onidata_postgres_data
 
 clear.python:
 	find . -type d -name __pycache__ -o \( -type f -name '*.py[co]' \) -print0 | xargs -0 rm -rf
