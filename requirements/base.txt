@@ -1,0 +1,21 @@
+# Bleeding edge Django
+django==2.2.2
+python-decouple==3.1
+
+# Api
+djangorestframework==3.9.4
+django-cors-headers==2.2.0
+
+# Database
+psycopg2-binary==2.7.6.1
+
+# Fixtures
+factory_boy==2.11.1
+
+# CI
+flake8==3.6.0
+
+# Setup tools
+setuptools==40.6.3
+
+# Dependencies
