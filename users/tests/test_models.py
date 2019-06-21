@@ -9,12 +9,12 @@ class UserTestCase(TestCase):
         self.assertEqual(User.objects.count(), 1)
 
     def test_update(self):
-        user = UserFactory(first_name='original')
-        self.assertEqual(User.objects.first().first_name, 'original')
+        user = UserFactory(email='original@email.com')
+        self.assertEqual(User.objects.first().email, 'original@email.com')
 
-        user.first_name = 'modificado'
+        user.email = 'modificado@email.com'
         user.save()
-        self.assertEqual(User.objects.first().first_name, 'modificado')
+        self.assertEqual(User.objects.first().email, 'modificado@email.com')
 
     def test_delete(self):
         user = UserFactory()
