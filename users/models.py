@@ -1,7 +1,7 @@
-from django.db.models import EmailField
+from django.contrib.auth.models import AbstractUser
 
 from core.models import BaseModel
 
 
-class User(BaseModel):
-    email = EmailField()
+class User(AbstractUser, BaseModel):
+    pass
