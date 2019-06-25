@@ -11,6 +11,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
             'id': {'read_only': True},
         }
 
+    def create(self, validated_data):
+        user = super(UserCreateSerializer, self).create(validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
 
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,4 +42,11 @@ class PasswordResetSerializer(serializers.ModelSerializer):
         fields = ['id', 'password']
         extra_kwargs = {
             'id': {'read_only': True},
+            'password': {'write_only': True}
         }
+
+    def update(self, instance, validated_data):
+        assert isinstance(instance, User)
+        instance.set_password(validated_data.get('password'))
+        instance.save()
+        return instance
