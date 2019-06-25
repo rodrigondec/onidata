@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.documentation import include_docs_urls
 
+from contracts.urls import urlpatterns as contracts
 from users.urls import urlpatterns as users
 
 
@@ -25,4 +26,5 @@ urlpatterns = [
     path('docs/', include_docs_urls(title='Onidata API'))
 ]
 
+urlpatterns += contracts
 urlpatterns += users
