@@ -9,4 +9,6 @@ class UserFactory(BaseModelFactory):
         model = User
 
     email = Faker('safe_email')
-
+    username = Faker('user_name')
+    first_name = Faker('fist_name')
+    last_name = Faker('last_name')
