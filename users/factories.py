@@ -10,5 +10,5 @@ class UserFactory(BaseModelFactory):
 
     email = Faker('safe_email')
     username = Faker('user_name')
-    first_name = Faker('fist_name')
+    first_name = Faker('first_name')
     last_name = Faker('last_name')
