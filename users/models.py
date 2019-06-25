@@ -7,3 +7,6 @@ from core.models import BaseModel
 
 class User(AbstractUser, BaseModel):
     email = models.EmailField(_('email address'), unique=True)
+
+    class Meta:
+        ordering = ['id']
