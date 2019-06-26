@@ -1,4 +1,5 @@
 from django.test import TestCase
+from freezegun import freeze_time
 
 from contracts.factories import ContractFactory, Contract
 from payments.factories import PaymentFactory
@@ -25,9 +26,17 @@ class ContractTestCase(TestCase):
         self.assertEqual(Contract.objects.count(), 0)
 
     def test_amount_due(self):
-        contract = ContractFactory(value=150)
+        contract = ContractFactory(initial_value=150, interest_rate=0)
         self.assertIsInstance(contract, Contract)
 
         PaymentFactory.create_batch(2, contract=contract, value=10)
 
         self.assertEqual(contract.amount_due, 130)
+
+    @freeze_time('2019-05-05 12:00:00')
+    def test_updated_value(self):
+        contract = ContractFactory(initial_value=150, interest_rate=1, start_date='2019-04-01')
+        self.assertIsInstance(contract, Contract)
+
+        self.assertEqual(contract.updated_value, 300)
+        self.assertEqual(contract.amount_due, 300)
