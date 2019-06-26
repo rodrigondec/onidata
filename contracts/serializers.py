@@ -10,7 +10,8 @@ class ContractSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contract
-        fields = ['id', 'user_id', 'info']
+        fields = ['id', 'user_id', 'info', 'value', 'amount_due']
         extra_kwargs = {
-            'id': {'read_only': True}
+            'id': {'read_only': True},
+            'amount_due': {'read_only': True}
         }

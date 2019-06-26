@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from contracts.factories import ContractFactory, Contract
+from payments.factories import PaymentFactory
 
 
 class ContractTestCase(TestCase):
@@ -22,3 +23,11 @@ class ContractTestCase(TestCase):
 
         contract.delete()
         self.assertEqual(Contract.objects.count(), 0)
+
+    def test_amount_due(self):
+        contract = ContractFactory(value=150)
+        self.assertIsInstance(contract, Contract)
+
+        PaymentFactory.create_batch(2, contract=contract, value=10)
+
+        self.assertEqual(contract.amount_due, 130)

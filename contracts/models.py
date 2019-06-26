@@ -16,3 +16,11 @@ class Contract(BaseModel):
 
     class Meta:
         ordering = ['user_id']
+
+    # noinspection PyTypeChecker,PyUnresolvedReferences
+    @property
+    def amount_due(self):
+        total_paid = 0.0
+        for payment in self.payments.all():
+            total_paid += payment.value
+        return self.value - total_paid
