@@ -19,6 +19,7 @@ from rest_framework.documentation import include_docs_urls
 
 from contracts.urls import urlpatterns as contracts
 from users.urls import urlpatterns as users
+from payments.urls import urlpatterns as payments
 
 
 urlpatterns = [
@@ -28,3 +29,4 @@ urlpatterns = [
 
 urlpatterns += contracts
 urlpatterns += users
+urlpatterns += payments

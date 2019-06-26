@@ -48,7 +48,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'core',
     'contracts',
-    'users'
+    'users',
+    'payments'
 ]
 
 INSTALLED_APPS = LOCAL_APPS + THIRD_PARTY_APPS + DEFAULT_APPS
