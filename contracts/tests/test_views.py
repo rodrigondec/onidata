@@ -4,7 +4,7 @@ from rest_framework import status
 # Project
 from core.test_utils import BaseAPITestCase
 from contracts.factories import ContractFactory, Contract
-from users.factories import UserFactory, User
+from users.factories import UserFactory
 
 
 class ContractsAPITestCase(BaseAPITestCase):
