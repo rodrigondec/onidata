@@ -12,4 +12,4 @@ class PaymentFactory(BaseModelFactory):
 
     contract = SubFactory(ContractFactory)
 
-    info = Faker('pyfloat', positive=True, right_digits=2, max_value=100, min_value=1)
+    value = Faker('pyfloat', positive=True, right_digits=2, max_value=100, min_value=1)
