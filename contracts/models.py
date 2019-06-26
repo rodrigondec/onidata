@@ -10,9 +10,7 @@ class Contract(BaseModel):
                              on_delete=models.CASCADE,
                              help_text='Usuário do contrato')
     info = models.TextField(help_text='Informações sobre o contrato')
-    value = models.DecimalField(
-        decimal_places=2,
-        max_digits=1000,
+    value = models.FloatField(
         help_text='Valor do pagamento',
         validators=[MinValueValidator(limit_value=1)])
 

@@ -9,9 +9,7 @@ class Payment(BaseModel):
                                  related_name='payments',
                                  on_delete=models.CASCADE,
                                  help_text='Contrato do pagamento')
-    value = models.DecimalField(
-        decimal_places=2,
-        max_digits=1000,
+    value = models.FloatField(
         help_text='Valor do pagamento',
         validators=[MinValueValidator(limit_value=1)])
 

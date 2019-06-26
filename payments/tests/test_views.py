@@ -136,7 +136,7 @@ class PaymentsAPITestCase(BaseAPITestCase):
 
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(response.data.get('value'), '15.00')
+        self.assertEqual(response.data.get('value'), 15)
 
     # DELETE
     def test_delete_success(self):
