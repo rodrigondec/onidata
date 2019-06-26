@@ -3,7 +3,9 @@ from rest_framework import status
 
 # Project
 from core.test_utils import BaseAPITestCase
+from contracts.factories import ContractFactory, Contract
 from users.factories import UserFactory, User
+from payments.factories import PaymentFactory, Payment
 
 
 class UsersAPITestCase(BaseAPITestCase):
@@ -168,3 +170,62 @@ class UsersAPITestCase(BaseAPITestCase):
         response = self.client.delete(path)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, msg=response.data)
         self.assertEqual(User.objects.count(), 0)
+
+    # NESTED VIEW SETS
+    def test_contracts_list(self):
+        user = UserFactory()
+        self.assertEqual(User.objects.count(), 1)
+
+        ContractFactory.create_batch(3, user=user)
+        self.assertEqual(Contract.objects.count(), 3)
+
+        path = self.get_path(id_detail=user.id, action='contracts')
+
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
+        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
+
+    def test_contracts_get(self):
+        user = UserFactory()
+        self.assertEqual(User.objects.count(), 1)
+
+        contract = ContractFactory(user=user, info='foo')
+        self.assertEqual(Contract.objects.count(), 1)
+
+        path = self.get_path(id_detail=user.id, action=f'contracts/{contract.id}')
+
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
+        self.assertEqual(response.data.get('info'), 'foo')
+
+    def test_payments_list(self):
+        user = UserFactory()
+        self.assertEqual(User.objects.count(), 1)
+
+        contract = ContractFactory(user=user, info='foo')
+        self.assertEqual(Contract.objects.count(), 1)
+
+        PaymentFactory.create_batch(3, contract=contract, value=15)
+        self.assertEqual(Payment.objects.count(), 3)
+
+        path = self.get_path(id_detail=user.id, action='payments')
+
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
+        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
+
+    def test_payments_get(self):
+        user = UserFactory()
+        self.assertEqual(User.objects.count(), 1)
+
+        contract = ContractFactory(user=user, info='foo')
+        self.assertEqual(Contract.objects.count(), 1)
+
+        payment = PaymentFactory(contract=contract, value=15)
+        self.assertEqual(Payment.objects.count(), 1)
+
+        path = self.get_path(id_detail=user.id, action=f'payments/{payment.id}')
+
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
+        self.assertEqual(response.data.get('value'), '15.00')
