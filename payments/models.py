@@ -5,7 +5,10 @@ from core.models import BaseModel
 
 
 class Payment(BaseModel):
-    contract = models.ForeignKey('contracts.Contract', on_delete=models.CASCADE, help_text='Contrato do pagamento')
+    contract = models.ForeignKey('contracts.Contract',
+                                 related_name='payments',
+                                 on_delete=models.CASCADE,
+                                 help_text='Contrato do pagamento')
     value = models.DecimalField(
         decimal_places=2,
         max_digits=1000,
