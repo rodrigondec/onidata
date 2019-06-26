@@ -1,11 +1,12 @@
-from rest_framework import viewsets
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from users.serializers import (
     UserCreateSerializer, UserListSerializer, UserUpdateSerializer,
     User)
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(NestedViewSetMixin, ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
