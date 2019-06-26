@@ -1,3 +1,6 @@
+from datetime import date as Date
+
+import pendulum
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -28,4 +31,18 @@ class Contract(BaseModel):
         total_paid = 0.0
         for payment in self.payments.all():
             total_paid += payment.value
-        return self.value - total_paid
+        return self.updated_value - total_paid
+
+    # noinspection PyTypeChecker
+    @property
+    def updated_value(self):
+        today = pendulum.now()
+        months_diff = today.diff(self.get_start_date()).in_months()
+        return self.initial_value + (self.initial_value * self.interest_rate * months_diff)
+
+    # noinspection PyTypeChecker
+    def get_start_date(self):
+        isoformat = self.start_date
+        if isinstance(self.start_date, Date):
+            isoformat = self.start_date.isoformat()
+        return pendulum.from_format(isoformat, 'YYYY-MM-DD')
