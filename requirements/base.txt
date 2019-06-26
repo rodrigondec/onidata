@@ -21,3 +21,4 @@ flake8==3.6.0
 setuptools==40.6.3
 
 # Dependencies
+pendulum==2.0.4
