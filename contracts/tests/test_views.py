@@ -19,7 +19,10 @@ class ContractsAPITestCase(BaseAPITestCase):
 
         data = {
             'user_id': user.id,
-            'info': 'foo'
+            'info': 'foo',
+            'initial_value': 150,
+            'interest_rate': 1,
+            'start_date': '2019-01-01'
         }
 
         path = self.get_path()
@@ -29,6 +32,11 @@ class ContractsAPITestCase(BaseAPITestCase):
         self.assertEqual(Contract.objects.count(), 1)
         self.assertEqual(Contract.objects.first().user, user)
         self.assertEqual(Contract.objects.first().info, 'foo')
+        self.assertEqual(Contract.objects.first().initial_value, 150)
+        self.assertEqual(Contract.objects.first().interest_rate, 1)
+        self.assertEqual(Contract.objects.first().start_date.isoformat(), '2019-01-01')
+        self.assertEqual(Contract.objects.first().updated_value, 900)
+        self.assertEqual(Contract.objects.first().amount_due, 900)
 
     def test_create_fail(self):
         self.assertEqual(Contract.objects.count(), 0)
@@ -51,7 +59,10 @@ class ContractsAPITestCase(BaseAPITestCase):
 
         data = {
             'user_id': contract.user.id,
-            'info': 'foo'
+            'info': 'foo',
+            'initial_value': 150,
+            'interest_rate': 0,
+            'start_date': '2019-01-01'
         }
         path = self.get_path(id_detail=contract.id)
 
@@ -60,6 +71,9 @@ class ContractsAPITestCase(BaseAPITestCase):
         self.assertEqual(Contract.objects.count(), 1)
         self.assertEqual(Contract.objects.first().user, contract.user)
         self.assertEqual(Contract.objects.first().info, 'foo')
+        self.assertEqual(Contract.objects.first().initial_value, 150)
+        self.assertEqual(Contract.objects.first().interest_rate, 0)
+        self.assertEqual(Contract.objects.first().start_date.isoformat(), '2019-01-01')
 
     def test_put_fail(self):
         contract = ContractFactory(info='flooo')
