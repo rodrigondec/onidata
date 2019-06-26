@@ -8,4 +8,4 @@ class Contract(BaseModel):
     info = models.TextField(help_text='Informações sobre o contrato')
 
     class Meta:
-        ordering = ['id']
+        ordering = ['user_id']
