@@ -12,3 +12,6 @@ class ContractViewSet(ModelViewSet):
     serializer_class = ContractSerializer
     permission_classes = [IsAuthenticatedOrCreate, IsOwnerOrCreate]
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.filter(user=request.user)
+        return super(ContractViewSet, self).list(request, *args, **kwargs)
