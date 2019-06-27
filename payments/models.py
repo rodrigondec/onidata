@@ -15,3 +15,7 @@ class Payment(BaseModel):
 
     class Meta:
         ordering = ['contract_id']
+
+    @property
+    def owner(self):
+        return self.contract.user

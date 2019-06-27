@@ -10,3 +10,7 @@ class User(AbstractUser, BaseModel):
 
     class Meta:
         ordering = ['id']
+
+    @property
+    def owner(self):
+        return self

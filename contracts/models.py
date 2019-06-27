@@ -25,6 +25,10 @@ class Contract(BaseModel):
     class Meta:
         ordering = ['user_id']
 
+    @property
+    def owner(self):
+        return self.user
+
     # noinspection PyTypeChecker,PyUnresolvedReferences
     @property
     def amount_due(self):
