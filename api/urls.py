@@ -24,7 +24,7 @@ from payments.urls import urlpatterns as payments
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('docs/', include_docs_urls(title='Onidata API'))
+    path('', include_docs_urls(title='Onidata API'))
 ]
 
 urlpatterns += contracts

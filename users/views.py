@@ -1,19 +1,18 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_extensions.mixins import NestedViewSetMixin
 
+from core.permissions import IsAuthenticatedOrCreate, IsOwnerOrCreate
 from users.serializers import (
     UserCreateSerializer, UserListSerializer, UserUpdateSerializer,
     User)
 
 
-class UserViewSet(NestedViewSetMixin, ModelViewSet):
+class UserViewSet(ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
     queryset = User.objects.all()
     serializer_class = UserListSerializer
-    authentication_classes = []
-    permission_classes = []
+    permission_classes = [IsAuthenticatedOrCreate, IsOwnerOrCreate]
 
     def get_serializer_class(self):
         update_actions = (
