@@ -2,13 +2,13 @@
 from rest_framework import status
 
 # Project
-from core.test_utils import BaseAPITestCase
+from core.test_utils import BaseAPIJWTTestCase
 from contracts.factories import ContractFactory, Contract
 from users.factories import UserFactory, User
 from payments.factories import PaymentFactory, Payment
 
 
-class UsersAPITestCase(BaseAPITestCase):
+class UsersAPITestCase(BaseAPIJWTTestCase):
     def setUp(self):
         super().setUp()
         self.endpoint = 'users'
@@ -73,6 +73,7 @@ class UsersAPITestCase(BaseAPITestCase):
     def test_put_success(self):
         user = UserFactory(first_name='flooo')
         self.assertEqual(User.objects.count(), 1)
+        self.set_user(user)
 
         self.assertEqual(User.objects.first().first_name, 'flooo')
 
@@ -84,7 +85,7 @@ class UsersAPITestCase(BaseAPITestCase):
         }
         path = self.get_path(id_detail=user.id)
 
-        response = self.client.put(path, data=data)
+        response = self.client.put(path, data=data, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.first().first_name, 'foo')
@@ -92,6 +93,7 @@ class UsersAPITestCase(BaseAPITestCase):
     def test_put_fail(self):
         user = UserFactory(first_name='flooo')
         self.assertEqual(User.objects.count(), 1)
+        self.set_user(user)
 
         self.assertEqual(User.objects.first().first_name, 'flooo')
 
@@ -100,7 +102,7 @@ class UsersAPITestCase(BaseAPITestCase):
         }
         path = self.get_path(id_detail=user.id)
 
-        response = self.client.put(path, data=data)
+        response = self.client.put(path, data=data, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, msg=response.data)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.first().first_name, 'flooo')
@@ -109,6 +111,7 @@ class UsersAPITestCase(BaseAPITestCase):
     def test_patch_success(self):
         user = UserFactory(first_name='flooo')
         self.assertEqual(User.objects.count(), 1)
+        self.set_user(user)
 
         self.assertEqual(User.objects.first().first_name, 'flooo')
 
@@ -117,7 +120,7 @@ class UsersAPITestCase(BaseAPITestCase):
         }
         path = self.get_path(id_detail=user.id)
 
-        response = self.client.patch(path, data=data)
+        response = self.client.patch(path, data=data, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.first().first_name, 'foo')
@@ -125,6 +128,7 @@ class UsersAPITestCase(BaseAPITestCase):
     def test_patch_fail(self):
         user = UserFactory(first_name='flooo')
         self.assertEqual(User.objects.count(), 1)
+        self.set_user(user)
 
         self.assertEqual(User.objects.first().first_name, 'flooo')
 
@@ -133,19 +137,20 @@ class UsersAPITestCase(BaseAPITestCase):
         }
         path = self.get_path(id_detail=user.id)
 
-        response = self.client.patch(path, data=data)
+        response = self.client.patch(path, data=data, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, msg=response.data)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.first().first_name, 'flooo')
 
     # LIST
     def test_list_success(self):
-        UserFactory.create_batch(3)
+        users = UserFactory.create_batch(3)
         self.assertEqual(User.objects.count(), 3)
+        self.set_user(users[0])
 
         path = self.get_path()
 
-        response = self.client.get(path)
+        response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
         self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
 
@@ -153,10 +158,11 @@ class UsersAPITestCase(BaseAPITestCase):
     def test_get_success(self):
         user = UserFactory(first_name='foo')
         self.assertEqual(User.objects.count(), 1)
+        self.set_user(user)
 
         path = self.get_path(id_detail=user.id)
 
-        response = self.client.get(path)
+        response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
         self.assertEqual(response.data.get('first_name'), 'foo')
 
@@ -164,68 +170,10 @@ class UsersAPITestCase(BaseAPITestCase):
     def test_delete_success(self):
         user = UserFactory()
         self.assertEqual(User.objects.count(), 1)
+        self.set_user(user)
 
         path = self.get_path(id_detail=user.id)
 
-        response = self.client.delete(path)
+        response = self.client.delete(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, msg=response.data)
         self.assertEqual(User.objects.count(), 0)
-
-    # NESTED VIEW SETS
-    def test_contracts_list(self):
-        user = UserFactory()
-        self.assertEqual(User.objects.count(), 1)
-
-        ContractFactory.create_batch(3, user=user)
-        self.assertEqual(Contract.objects.count(), 3)
-
-        path = self.get_path(id_detail=user.id, action='contracts')
-
-        response = self.client.get(path)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
-
-    def test_contracts_get(self):
-        user = UserFactory()
-        self.assertEqual(User.objects.count(), 1)
-
-        contract = ContractFactory(user=user, info='foo')
-        self.assertEqual(Contract.objects.count(), 1)
-
-        path = self.get_path(id_detail=user.id, action=f'contracts/{contract.id}')
-
-        response = self.client.get(path)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(response.data.get('info'), 'foo')
-
-    def test_payments_list(self):
-        user = UserFactory()
-        self.assertEqual(User.objects.count(), 1)
-
-        contract = ContractFactory(user=user, info='foo')
-        self.assertEqual(Contract.objects.count(), 1)
-
-        PaymentFactory.create_batch(3, contract=contract, value=15)
-        self.assertEqual(Payment.objects.count(), 3)
-
-        path = self.get_path(id_detail=user.id, action='payments')
-
-        response = self.client.get(path)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
-
-    def test_payments_get(self):
-        user = UserFactory()
-        self.assertEqual(User.objects.count(), 1)
-
-        contract = ContractFactory(user=user, info='foo')
-        self.assertEqual(Contract.objects.count(), 1)
-
-        payment = PaymentFactory(contract=contract, value=15)
-        self.assertEqual(Payment.objects.count(), 1)
-
-        path = self.get_path(id_detail=user.id, action=f'payments/{payment.id}')
-
-        response = self.client.get(path)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(response.data.get('value'), 15)
