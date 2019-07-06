@@ -1,26 +1,13 @@
-# from rest_framework_jwt.settings import api_settings
 from rest_framework.test import APITestCase
-
-# from users.factories import UserFactory
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class BaseAPITestCase(APITestCase):
 
     def setUp(self):
-        # self.user = UserFactory()
-        # self.user.set_password('test')
-        # self.user.save()
-
         self.endpoint = None
 
-        # jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-        # jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-        # payload = jwt_payload_handler(self.user)
-        # self.token = jwt_encode_handler(payload)
-
-        # self.auth = 'Bearer {}'.format(self.token)
-
-    def get_path(self, id_detail=None, action=None, filter=None):
+    def get_path(self, id_detail=None, action=None, _filter=None):
         if not self.endpoint:
             raise AttributeError('Endpoint não definido')
         path = f'/{self.endpoint}/'
@@ -29,5 +16,23 @@ class BaseAPITestCase(APITestCase):
         if action:
             path += f'{action}/'
         if filter:
-            path += f'?{filter}'
+            path += f'?{_filter}'
         return path
+
+
+class BaseAPIJWTTestCase(BaseAPITestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.user = None
+        self.token = None
+
+    @property
+    def auth(self):
+        if not self.token:
+            raise ValueError('Chame o método set_user passando o usuário antes de utilizar o auth')
+        return f'Bearer {self.token.access_token}'
+
+    def set_user(self, user):
+        self.user = user
+        self.token = RefreshToken.for_user(self.user)
