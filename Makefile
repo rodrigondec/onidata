@@ -51,3 +51,6 @@ clear.python:
 
 clear.docker:
 	docker ps | awk '{print $$1}' | grep -v CONTAINER | xargs docker stop
+
+populate.superuser:
+	docker-compose run django python manage.py populate_superuser
