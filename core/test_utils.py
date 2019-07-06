@@ -26,12 +26,13 @@ class BaseAPIJWTTestCase(BaseAPITestCase):
         super().setUp()
         self.user = None
         self.token = None
-        self.auth = None
+
+    @property
+    def auth(self):
+        if not self.token:
+            raise ValueError('Chame o método set_user passando o usuário antes de utilizar o auth')
+        return f'Bearer {self.token.access_token}'
 
     def set_user(self, user):
         self.user = user
-        self._set_token()
-
-    def _set_token(self):
         self.token = RefreshToken.for_user(self.user)
-        self.auth = f'Bearer {self.token.access_token}'
