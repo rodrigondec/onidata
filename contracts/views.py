@@ -2,6 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from core.permissions import IsAuthenticatedOrCreate, IsOwnerOrCreate
 from contracts.serializers import ContractSerializer, Contract
+from core.utils import get_client_ip
 
 
 class ContractViewSet(ModelViewSet):
@@ -13,5 +14,9 @@ class ContractViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrCreate, IsOwnerOrCreate]
 
     def list(self, request, *args, **kwargs):
-        self.queryset = self.queryset.filter(user=request.user)
+        self.queryset = self.queryset.filter(client=request.user)
         return super(ContractViewSet, self).list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        request.data['ip_address'] = get_client_ip(request)
+        return super(ContractViewSet, self).create(request, *args, **kwargs)
