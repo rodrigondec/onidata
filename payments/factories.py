@@ -13,3 +13,4 @@ class PaymentFactory(BaseModelFactory):
     contract = SubFactory(ContractFactory)
 
     value = Faker('pyfloat', positive=True, right_digits=2, max_value=100, min_value=1)
+    date = Faker('date_this_year')

@@ -20,7 +20,8 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
 
         data = {
             'contract_id': contract.id,
-            'value': 10.5
+            'value': 10.5,
+            'date': '2019-06-06'
         }
 
         path = self.get_path()
@@ -30,6 +31,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(Payment.objects.count(), 1)
         self.assertEqual(Payment.objects.first().contract, contract)
         self.assertEqual(Payment.objects.first().value, 10.5)
+        self.assertEqual(Payment.objects.first().date.isoformat(), '2019-06-06')
 
     def test_create_fail(self):
         contract = ContractFactory()
@@ -57,7 +59,8 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
 
         data = {
             'contract_id': payment.contract.id,
-            'value': 15
+            'value': 15,
+            'date': payment.date
         }
         path = self.get_path(id_detail=payment.id)
 

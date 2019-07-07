@@ -10,7 +10,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ['id', 'contract_id', 'value']
+        fields = ['id', 'contract_id', 'value', 'date']
         extra_kwargs = {
             'id': {'read_only': True}
         }
