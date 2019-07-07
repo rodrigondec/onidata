@@ -8,26 +8,30 @@ from core.models import BaseModel
 
 
 class Contract(BaseModel):
-    user = models.ForeignKey('users.User',
-                             related_name='contracts',
-                             on_delete=models.CASCADE,
-                             help_text='Usuário do contrato')
-    info = models.TextField(help_text='Informações sobre o contrato')
-    initial_value = models.FloatField(
+    client = models.ForeignKey('users.User',
+                               related_name='contracts',
+                               on_delete=models.CASCADE,
+                               help_text='Usuário do contrato')
+    bank = models.TextField(help_text='Banco do contrato')
+    amount = models.FloatField(
         help_text='Valor do contrato',
         validators=[MinValueValidator(limit_value=1)])
     interest_rate = models.FloatField(
         help_text='Porcentagem de juros',
         validators=[MinValueValidator(limit_value=0), MaxValueValidator(limit_value=1)]
     )
-    start_date = models.DateField()
+    submission_date = models.DateField(
+        help_text='Data de submissão'
+    )
+
+    ip_address = models.GenericIPAddressField()
 
     class Meta:
-        ordering = ['user_id']
+        ordering = ['client_id']
 
     @property
     def owner(self):
-        return self.user
+        return self.client
 
     # noinspection PyTypeChecker,PyUnresolvedReferences
     @property
@@ -42,11 +46,11 @@ class Contract(BaseModel):
     def updated_value(self):
         today = pendulum.now()
         months_diff = today.diff(self.get_start_date()).in_months()
-        return self.initial_value + (self.initial_value * self.interest_rate * months_diff)
+        return self.amount + (self.amount * self.interest_rate * months_diff)
 
     # noinspection PyTypeChecker
     def get_start_date(self):
-        isoformat = self.start_date
-        if isinstance(self.start_date, Date):
-            isoformat = self.start_date.isoformat()
+        isoformat = self.submission_date
+        if isinstance(self.submission_date, Date):
+            isoformat = self.submission_date.isoformat()
         return pendulum.from_format(isoformat, 'YYYY-MM-DD')
