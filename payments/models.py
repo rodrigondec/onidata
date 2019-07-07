@@ -12,6 +12,9 @@ class Payment(BaseModel):
     value = models.FloatField(
         help_text='Valor do pagamento',
         validators=[MinValueValidator(limit_value=1)])
+    date = models.DateField(
+        help_text='Data de pagamento'
+    )
 
     class Meta:
         ordering = ['contract_id']
