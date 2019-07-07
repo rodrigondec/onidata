@@ -12,3 +12,4 @@ class UserFactory(BaseModelFactory):
     username = Faker('user_name')
     first_name = Faker('first_name')
     last_name = Faker('last_name')
+    cpf = Faker('text', max_nb_chars=14)
