@@ -16,7 +16,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
     def test_create_success(self):
         contract = ContractFactory()
         self.assertEqual(Payment.objects.count(), 0)
-        self.set_user(contract.user)
+        self.set_user(contract.client)
 
         data = {
             'contract_id': contract.id,
@@ -34,7 +34,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
     def test_create_fail(self):
         contract = ContractFactory()
         self.assertEqual(Payment.objects.count(), 0)
-        self.set_user(contract.user)
+        self.set_user(contract.client)
 
         data = {
             'contract_id': contract.id,
@@ -51,7 +51,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
     def test_put_success(self):
         payment = PaymentFactory(value=10.5)
         self.assertEqual(Payment.objects.count(), 1)
-        self.set_user(payment.contract.user)
+        self.set_user(payment.contract.client)
 
         self.assertEqual(Payment.objects.first().value, 10.5)
 
@@ -70,7 +70,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
     def test_put_fail(self):
         payment = PaymentFactory(value=10.5)
         self.assertEqual(Payment.objects.count(), 1)
-        self.set_user(payment.contract.user)
+        self.set_user(payment.contract.client)
 
         self.assertEqual(Payment.objects.first().value, 10.5)
 
@@ -89,7 +89,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
     def test_patch_success(self):
         payment = PaymentFactory(value=10.5)
         self.assertEqual(Payment.objects.count(), 1)
-        self.set_user(payment.contract.user)
+        self.set_user(payment.contract.client)
 
         self.assertEqual(Payment.objects.first().value, 10.5)
 
@@ -107,7 +107,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
     def test_patch_fail(self):
         payment = PaymentFactory(value=10.5)
         self.assertEqual(Payment.objects.count(), 1)
-        self.set_user(payment.contract.user)
+        self.set_user(payment.contract.client)
 
         self.assertEqual(Payment.objects.first().value, 10.5)
 
@@ -127,7 +127,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
         contract = ContractFactory()
         PaymentFactory.create_batch(3, contract=contract)
         self.assertEqual(Payment.objects.count(), 3)
-        self.set_user(contract.user)
+        self.set_user(contract.client)
 
         path = self.get_path()
 
@@ -139,7 +139,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
     def test_get_success(self):
         payment = PaymentFactory(value=15)
         self.assertEqual(Payment.objects.count(), 1)
-        self.set_user(payment.contract.user)
+        self.set_user(payment.contract.client)
 
         path = self.get_path(id_detail=payment.id)
 
@@ -151,7 +151,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
     def test_delete_success(self):
         payment = PaymentFactory(value=15)
         self.assertEqual(Payment.objects.count(), 1)
-        self.set_user(payment.contract.user)
+        self.set_user(payment.contract.client)
 
         path = self.get_path(id_detail=payment.id)
 
