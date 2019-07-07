@@ -18,4 +18,4 @@ class Payment(BaseModel):
 
     @property
     def owner(self):
-        return self.contract.user
+        return self.contract.owner

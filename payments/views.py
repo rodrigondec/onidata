@@ -13,5 +13,5 @@ class PaymentViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrCreate, IsOwnerOrCreate]
 
     def list(self, request, *args, **kwargs):
-        self.queryset = self.queryset.filter(contract__user=request.user)
+        self.queryset = self.queryset.filter(contract__client=request.user)
         return super(PaymentViewSet, self).list(request, *args, **kwargs)

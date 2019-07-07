@@ -22,7 +22,8 @@ class UsersAPITestCase(BaseAPIJWTTestCase):
             'password': 'password',
             'email': 'test@test.com',
             'first_name': 'foo',
-            'last_name': 'bar'
+            'last_name': 'bar',
+            'cpf': '123.123.123-12'
         }
 
         path = self.get_path()
@@ -33,6 +34,7 @@ class UsersAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(User.objects.first().username, 'test')
         self.assertNotEqual(User.objects.first().password, 'password')
         self.assertEqual(User.objects.first().email, 'test@test.com')
+        self.assertEqual(User.objects.first().cpf, '123.123.123-12')
         self.assertEqual(User.objects.first().first_name, 'foo')
         self.assertEqual(User.objects.first().last_name, 'bar')
 
