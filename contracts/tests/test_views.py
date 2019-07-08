@@ -146,11 +146,61 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
         self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
 
+    def test_list_two_users_success(self):
+        user = UserFactory()
+        ContractFactory.create_batch(3, client=user)
+        self.assertEqual(Contract.objects.count(), 3)
+        self.set_user(user)
+
+        path = self.get_path()
+
+        response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
+        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
+
+        user2 = UserFactory()
+        ContractFactory.create_batch(2, client=user2)
+        self.assertEqual(Contract.objects.count(), 5)
+        self.set_user(user2)
+
+        path = self.get_path()
+
+        response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
+        self.assertEqual(len(response.data.get('results')), 2, msg=response.data)
+
+    def test_list_admin_success(self):
+        user = UserFactory()
+        ContractFactory.create_batch(3, client=user)
+        self.assertEqual(Contract.objects.count(), 3)
+
+        admin = UserFactory(is_staff=True, is_superuser=True)
+        self.set_user(admin)
+
+        path = self.get_path()
+
+        response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
+        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
+
     # GET
     def test_get_success(self):
         contract = ContractFactory(bank='foo')
         self.assertEqual(Contract.objects.count(), 1)
         self.set_user(contract.client)
+
+        path = self.get_path(id_detail=contract.id)
+
+        response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
+        self.assertEqual(response.data.get('bank'), 'foo')
+
+    def test_get_admin_success(self):
+        contract = ContractFactory(bank='foo')
+        self.assertEqual(Contract.objects.count(), 1)
+
+        admin = UserFactory(is_staff=True, is_superuser=True)
+        self.set_user(admin)
 
         path = self.get_path(id_detail=contract.id)
 
