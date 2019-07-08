@@ -9,6 +9,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'cpf', 'password', 'username', 'first_name', 'last_name']
         extra_kwargs = {
             'id': {'read_only': True},
+            'password': {'help_text': 'Senha do usuário'},
+            'first_name': {'help_text': 'Primeiro nome do usuário'},
+            'last_name': {'help_text': 'Último nome do usuário'}
+
         }
 
     def create(self, validated_data):
@@ -33,6 +37,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'first_name', 'last_name']
         extra_kwargs = {
             'id': {'read_only': True},
+            'first_name': {'help_text': 'Primeiro nome do usuário'},
+            'last_name': {'help_text': 'Último nome do usuário'}
         }
 
 

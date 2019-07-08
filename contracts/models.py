@@ -24,7 +24,7 @@ class Contract(BaseModel):
         help_text='Data de submissão'
     )
 
-    ip_address = models.GenericIPAddressField()
+    ip_address = models.GenericIPAddressField(help_text='Endereço ip da submissão')
 
     class Meta:
         ordering = ['client_id']
