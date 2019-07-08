@@ -15,7 +15,7 @@ class ContractSerializer(serializers.ModelSerializer):
                   'updated_value', 'amount_due', 'ip_address']
         extra_kwargs = {
             'id': {'read_only': True},
-            'ip_address': {'required': False},
+            'ip_address': {'read_only': True},
             'updated_value': {'read_only': True},
             'amount_due': {'read_only': True}
         }

@@ -10,7 +10,7 @@ from users.factories import UserFactory
 class ContractsAPITestCase(BaseAPIJWTTestCase):
     def setUp(self):
         super().setUp()
-        self.endpoint = 'contracts'
+        self.endpoint = "contracts"
 
     # CREATE
     def test_create_success(self):
@@ -19,11 +19,11 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.set_user(user)
 
         data = {
-            'client_id': user.id,
-            'bank': 'foo',
-            'amount': 150,
-            'interest_rate': 1,
-            'submission_date': '2019-01-01'
+            "client_id": user.id,
+            "bank": "foo",
+            "amount": 150,
+            "interest_rate": 1,
+            "submission_date": "2019-01-01"
         }
 
         path = self.get_path()
@@ -32,11 +32,12 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, msg=response.data)
         self.assertEqual(Contract.objects.count(), 1)
         self.assertEqual(Contract.objects.first().client, user)
-        self.assertEqual(Contract.objects.first().bank, 'foo')
+        self.assertEqual(Contract.objects.first().bank, "foo")
         self.assertEqual(Contract.objects.first().amount, 150)
         self.assertEqual(Contract.objects.first().interest_rate, 1)
-        self.assertEqual(Contract.objects.first().submission_date.isoformat(), '2019-01-01')
-        self.assertEqual(Contract.objects.first().ip_address, '127.0.0.1')
+        self.assertEqual(Contract.objects.first().submission_date.isoformat(), "2019-01-01")
+        self.assertEqual(Contract.objects.first().ip_address, "127.0.0.1")
+        self.assertEqual(response.data.get("ip_address"), "127.0.0.1")
 
     def test_create_fail(self):
         user = UserFactory()
@@ -44,7 +45,7 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.set_user(user)
 
         data = {
-            'bank': 'foo'
+            "bank": "foo"
         }
         path = self.get_path()
 
@@ -54,18 +55,18 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
 
     # PUT
     def test_put_success(self):
-        contract = ContractFactory(bank='flooo')
+        contract = ContractFactory(bank="flooo")
         self.assertEqual(Contract.objects.count(), 1)
         self.set_user(contract.client)
 
-        self.assertEqual(Contract.objects.first().bank, 'flooo')
+        self.assertEqual(Contract.objects.first().bank, "flooo")
 
         data = {
-            'client_id': contract.client.id,
-            'bank': 'foo',
-            'amount': 150,
-            'interest_rate': 0,
-            'submission_date': '2019-01-01'
+            "client_id": contract.client.id,
+            "bank": "foo",
+            "amount": 150,
+            "interest_rate": 0,
+            "submission_date": "2019-01-01"
         }
         path = self.get_path(id_detail=contract.id)
 
@@ -73,20 +74,20 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
         self.assertEqual(Contract.objects.count(), 1)
         self.assertEqual(Contract.objects.first().client, contract.client)
-        self.assertEqual(Contract.objects.first().bank, 'foo')
+        self.assertEqual(Contract.objects.first().bank, "foo")
         self.assertEqual(Contract.objects.first().amount, 150)
         self.assertEqual(Contract.objects.first().interest_rate, 0)
-        self.assertEqual(Contract.objects.first().submission_date.isoformat(), '2019-01-01')
+        self.assertEqual(Contract.objects.first().submission_date.isoformat(), "2019-01-01")
 
     def test_put_fail_missing_field(self):
-        contract = ContractFactory(bank='flooo')
+        contract = ContractFactory(bank="flooo")
         self.assertEqual(Contract.objects.count(), 1)
         self.set_user(contract.client)
 
-        self.assertEqual(Contract.objects.first().bank, 'flooo')
+        self.assertEqual(Contract.objects.first().bank, "flooo")
 
         data = {
-            'bank': 'foo'
+            "bank": "foo"
         }
         path = self.get_path(id_detail=contract.id)
 
@@ -94,38 +95,38 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, msg=response.data)
         self.assertEqual(Contract.objects.count(), 1)
         self.assertEqual(Contract.objects.first().client, contract.client)
-        self.assertEqual(Contract.objects.first().bank, 'flooo')
+        self.assertEqual(Contract.objects.first().bank, "flooo")
 
     def test_put_fail_unauthorized(self):
-        contract = ContractFactory(bank='flooo')
+        contract = ContractFactory(bank="flooo")
         self.assertEqual(Contract.objects.count(), 1)
         self.set_user(UserFactory())
 
-        self.assertEqual(Contract.objects.first().bank, 'flooo')
+        self.assertEqual(Contract.objects.first().bank, "flooo")
 
         data = {
-            'client_id': contract.client.id,
-            'bank': 'foo',
-            'amount': 150,
-            'interest_rate': 0,
-            'submission_date': '2019-01-01'
+            "client_id": contract.client.id,
+            "bank": "foo",
+            "amount": 150,
+            "interest_rate": 0,
+            "submission_date": "2019-01-01"
         }
         path = self.get_path(id_detail=contract.id)
 
         response = self.client.put(path, data=data, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, msg=response.data)
-        self.assertEqual(Contract.objects.first().bank, 'flooo')
+        self.assertEqual(Contract.objects.first().bank, "flooo")
 
     # PATCH
     def test_patch_success(self):
-        contract = ContractFactory(bank='flooo')
+        contract = ContractFactory(bank="flooo")
         self.assertEqual(Contract.objects.count(), 1)
         self.set_user(contract.client)
 
-        self.assertEqual(Contract.objects.first().bank, 'flooo')
+        self.assertEqual(Contract.objects.first().bank, "flooo")
 
         data = {
-            'bank': 'foo'
+            "bank": "foo"
         }
         path = self.get_path(id_detail=contract.id)
 
@@ -133,17 +134,17 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
         self.assertEqual(Contract.objects.count(), 1)
         self.assertEqual(Contract.objects.first().client, contract.client)
-        self.assertEqual(Contract.objects.first().bank, 'foo')
+        self.assertEqual(Contract.objects.first().bank, "foo")
 
     def test_patch_fail(self):
-        contract = ContractFactory(bank='flooo')
+        contract = ContractFactory(bank="flooo")
         self.assertEqual(Contract.objects.count(), 1)
         self.set_user(contract.client)
 
-        self.assertEqual(Contract.objects.first().bank, 'flooo')
+        self.assertEqual(Contract.objects.first().bank, "flooo")
 
         data = {
-            'bank': ''
+            "bank": ""
         }
         path = self.get_path(id_detail=contract.id)
 
@@ -151,7 +152,7 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, msg=response.data)
         self.assertEqual(Contract.objects.count(), 1)
         self.assertEqual(Contract.objects.first().client, contract.client)
-        self.assertEqual(Contract.objects.first().bank, 'flooo')
+        self.assertEqual(Contract.objects.first().bank, "flooo")
 
     # LIST
     def test_list_success(self):
@@ -164,7 +165,7 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
 
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
+        self.assertEqual(len(response.data.get("results")), 3, msg=response.data)
 
     def test_list_two_users_success(self):
         user = UserFactory()
@@ -176,7 +177,7 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
 
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
+        self.assertEqual(len(response.data.get("results")), 3, msg=response.data)
 
         user2 = UserFactory()
         ContractFactory.create_batch(2, client=user2)
@@ -187,7 +188,7 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
 
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(len(response.data.get('results')), 2, msg=response.data)
+        self.assertEqual(len(response.data.get("results")), 2, msg=response.data)
 
     def test_list_admin_success(self):
         user = UserFactory()
@@ -201,11 +202,11 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
 
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
+        self.assertEqual(len(response.data.get("results")), 3, msg=response.data)
 
     # GET
     def test_get_success(self):
-        contract = ContractFactory(bank='foo')
+        contract = ContractFactory(bank="foo", ip_address="127.0.0.1")
         self.assertEqual(Contract.objects.count(), 1)
         self.set_user(contract.client)
 
@@ -213,10 +214,11 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
 
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(response.data.get('bank'), 'foo')
+        self.assertEqual(response.data.get("bank"), "foo")
+        self.assertEqual(response.data.get("ip_address"), "127.0.0.1")
 
     def test_get_admin_success(self):
-        contract = ContractFactory(bank='foo')
+        contract = ContractFactory(bank="foo")
         self.assertEqual(Contract.objects.count(), 1)
 
         self.set_user(UserFactory(is_staff=True, is_superuser=True))
@@ -225,10 +227,10 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
 
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(response.data.get('bank'), 'foo')
+        self.assertEqual(response.data.get("bank"), "foo")
 
     def test_get_fail_unauthorized(self):
-        contract = ContractFactory(bank='foo')
+        contract = ContractFactory(bank="foo")
         self.assertEqual(Contract.objects.count(), 1)
 
         self.set_user(UserFactory())

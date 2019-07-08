@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
-from core.permissions import IsAuthenticatedOrCreate, IsOwner
+from core.permissions import IsOwner
 from payments.serializers import PaymentSerializer, Payment
 
 
@@ -10,7 +11,7 @@ class PaymentViewSet(ModelViewSet):
     """
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
-    permission_classes = [IsAuthenticatedOrCreate, IsOwner]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def list(self, request, *args, **kwargs):
         self.queryset = self.queryset.filter(contract__client=request.user)

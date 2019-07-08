@@ -10,7 +10,7 @@ from contracts.factories import ContractFactory
 class PaymentsAPITestCase(BaseAPIJWTTestCase):
     def setUp(self):
         super().setUp()
-        self.endpoint = 'payments'
+        self.endpoint = "payments"
 
     # CREATE
     def test_create_success(self):
@@ -19,9 +19,9 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
         self.set_user(contract.client)
 
         data = {
-            'contract_id': contract.id,
-            'value': 10.5,
-            'date': '2019-06-06'
+            "contract_id": contract.id,
+            "value": 10.5,
+            "date": "2019-06-06"
         }
 
         path = self.get_path()
@@ -31,7 +31,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(Payment.objects.count(), 1)
         self.assertEqual(Payment.objects.first().contract, contract)
         self.assertEqual(Payment.objects.first().value, 10.5)
-        self.assertEqual(Payment.objects.first().date.isoformat(), '2019-06-06')
+        self.assertEqual(Payment.objects.first().date.isoformat(), "2019-06-06")
 
     def test_create_fail(self):
         contract = ContractFactory()
@@ -39,8 +39,8 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
         self.set_user(contract.client)
 
         data = {
-            'contract_id': contract.id,
-            'value': -1
+            "contract_id": contract.id,
+            "value": -1
         }
 
         path = self.get_path()
@@ -58,9 +58,9 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(Payment.objects.first().value, 10.5)
 
         data = {
-            'contract_id': payment.contract.id,
-            'value': 15,
-            'date': payment.date
+            "contract_id": payment.contract.id,
+            "value": 15,
+            "date": payment.date
         }
         path = self.get_path(id_detail=payment.id)
 
@@ -78,7 +78,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(Payment.objects.first().value, 10.5)
 
         data = {
-            'value': 15
+            "value": 15
         }
         path = self.get_path(id_detail=payment.id)
 
@@ -97,7 +97,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(Payment.objects.first().value, 10.5)
 
         data = {
-            'value': 15
+            "value": 15
         }
         path = self.get_path(id_detail=payment.id)
 
@@ -115,7 +115,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(Payment.objects.first().value, 10.5)
 
         data = {
-            'value': 0
+            "value": 0
         }
         path = self.get_path(id_detail=payment.id)
 
@@ -136,7 +136,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
 
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(len(response.data.get('results')), 3, msg=response.data)
+        self.assertEqual(len(response.data.get("results")), 3, msg=response.data)
 
     # GET
     def test_get_success(self):
@@ -148,7 +148,7 @@ class PaymentsAPITestCase(BaseAPIJWTTestCase):
 
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
-        self.assertEqual(response.data.get('value'), 15)
+        self.assertEqual(response.data.get("value"), 15)
 
     # DELETE
     def test_delete_success(self):
