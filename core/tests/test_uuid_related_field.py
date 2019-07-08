@@ -7,7 +7,7 @@ from rest_framework.serializers import ValidationError
 from core.serializer_fields import UUIDRelatedField
 
 
-class IsOwnerTestCase(TestCase):
+class UUIDRelatedFieldTestCase(TestCase):
     def setUp(self):
         self.field = UUIDRelatedField(MagicMock())
 
