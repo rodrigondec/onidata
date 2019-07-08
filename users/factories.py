@@ -13,3 +13,6 @@ class UserFactory(BaseModelFactory):
     first_name = Faker('first_name')
     last_name = Faker('last_name')
     cpf = Faker('text', max_nb_chars=14)
+
+    is_staff = False
+    is_superuser = False
