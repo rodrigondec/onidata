@@ -17,9 +17,6 @@ makemigrations:
 test:
 	docker-compose run django python manage.py test $(app)
 
-pytest:
-	docker-compose run django pytest --disable-warnings -v $(app)
-
 bash:
 	docker-compose run django bash
 
@@ -42,6 +39,9 @@ down:
 build:
 	docker-compose build
 
+config.env:
+	cp .env.example .env
+
 remove.volumes::
 	docker-compose down
 	docker volume rm onidata_postgres_data
@@ -52,5 +52,20 @@ clear.python:
 clear.docker:
 	docker ps | awk '{print $$1}' | grep -v CONTAINER | xargs docker stop
 
+################################################################################
+# Populate commands
+################################################################################
 populate.superuser:
 	docker-compose run django python manage.py populate_superuser
+
+################################################################################
+# Local commands
+################################################################################
+local.pip.install:
+	pip install -r requirements/local.txt
+
+################################################################################
+# Heroku commands
+################################################################################
+deploy:
+	git push heroku
