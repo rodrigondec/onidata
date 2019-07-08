@@ -23,14 +23,19 @@ On the project folder:
 - run the command `$ make test` or `$ make test app=$(app_name)`. You may run the command `$ make coverage` instead.
 - run the command `$ make flake8`
 
-# Using the API
+## Administration
+Django Admin Site is enabled for the project on [http://0.0.0.0:8000/admin](http://0.0.0.0:8000/admin).
+
+The command `$ make populate.superuser` may be used to create the superuser `User(username='superuser', password='@Admin123')`.
+
+## Using the API
 Access the [localhost server](http://0.0.0.0:8000) and browse the api. 
 > DRF Coreapi Documentation 
 ![coreapi documentation](docs/coreapi.png?raw=true "Coreapi Documentation")
 
 You may interact with the API via browser or via http request softwares such as [Insomnia](#insomnia-setup)
 
-## Insomnia Setup
+### Insomnia Setup
 Install Insomnia Rest from the [official website](https://insomnia.rest/download/).
 
 Import the file `insomnia_data.json` located on the project folder.
@@ -43,3 +48,11 @@ Activate the `Onidata` workspace and `Onidata` environment
 
 > enviroment
 ![onidata environment](docs/onidata_environment.png?raw=true "Onidata Environment")
+
+## Major libs used
+- [Django](https://www.djangoproject.com/)
+- [DRF](https://www.django-rest-framework.org/)
+- [Coreapi](https://www.coreapi.org/)
+- [drf-simplejwt](https://github.com/davesque/django-rest-framework-simplejwt)
+- [factory boy](https://factoryboy.readthedocs.io/en/latest/)
+- [pendulum](https://pendulum.eustace.io/)
