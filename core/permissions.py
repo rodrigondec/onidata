@@ -17,7 +17,7 @@ class IsOwner(permissions.BasePermission):
         return obj.owner == request.user
 
 
-class IsOwnerOrGetAdminOrCreate(IsOwnerOrCreate):
+class IsOwnerOrAdmin(IsOwner):
     """
     Object-level permission to only allow owners of an object to edit or view it.
     If user is superuser it allows view methods.
@@ -25,6 +25,5 @@ class IsOwnerOrGetAdminOrCreate(IsOwnerOrCreate):
     """
 
     def has_object_permission(self, request, view, obj):
-        if request.method == 'GET' and request.user.is_superuser:
-            return True
-        return super(IsOwnerOrCreate, self).has_object_permission(request,view, obj)
+        return (super().has_object_permission(request, view, obj) or
+                view.action == 'retrieve' and request.user.is_superuser)
