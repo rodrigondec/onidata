@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 
-from core.permissions import IsAuthenticatedOrCreate, IsOwnerOrCreate
+from core.permissions import IsAuthenticatedOrCreate, IsOwnerOrGetAdminOrCreate
 from contracts.serializers import ContractSerializer, Contract
 from core.utils import get_client_ip
 
@@ -11,10 +11,11 @@ class ContractViewSet(ModelViewSet):
     """
     queryset = Contract.objects.all()
     serializer_class = ContractSerializer
-    permission_classes = [IsAuthenticatedOrCreate, IsOwnerOrCreate]
+    permission_classes = [IsAuthenticatedOrCreate, IsOwnerOrGetAdminOrCreate]
 
     def list(self, request, *args, **kwargs):
-        self.queryset = self.queryset.filter(client=request.user)
+        if not request.user.is_superuser:
+            self.queryset = self.queryset.filter(client=request.user)
         return super(ContractViewSet, self).list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
