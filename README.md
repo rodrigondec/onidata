@@ -7,8 +7,8 @@ Install [docker-ce](https://docs.docker.com/install/) and [docker-compose](https
 
 ### Setting up
 On the project folder run the following commands:
-1. `$ make config.env`
-2. `$ make build`
+1. `$ make config.env` to copy the file `.env.example` to `.env`
+2. `$ make build` to build docker containers
 
 # Running the project
 Simply run the command `$ make up` and *voilà*.
