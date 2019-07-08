@@ -78,7 +78,7 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(Contract.objects.first().interest_rate, 0)
         self.assertEqual(Contract.objects.first().submission_date.isoformat(), '2019-01-01')
 
-    def test_put_fail(self):
+    def test_put_fail_missing_field(self):
         contract = ContractFactory(bank='flooo')
         self.assertEqual(Contract.objects.count(), 1)
         self.set_user(contract.client)
@@ -94,6 +94,26 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, msg=response.data)
         self.assertEqual(Contract.objects.count(), 1)
         self.assertEqual(Contract.objects.first().client, contract.client)
+        self.assertEqual(Contract.objects.first().bank, 'flooo')
+
+    def test_put_fail_unauthorized(self):
+        contract = ContractFactory(bank='flooo')
+        self.assertEqual(Contract.objects.count(), 1)
+        self.set_user(UserFactory())
+
+        self.assertEqual(Contract.objects.first().bank, 'flooo')
+
+        data = {
+            'client_id': contract.client.id,
+            'bank': 'foo',
+            'amount': 150,
+            'interest_rate': 0,
+            'submission_date': '2019-01-01'
+        }
+        path = self.get_path(id_detail=contract.id)
+
+        response = self.client.put(path, data=data, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, msg=response.data)
         self.assertEqual(Contract.objects.first().bank, 'flooo')
 
     # PATCH
@@ -199,14 +219,24 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         contract = ContractFactory(bank='foo')
         self.assertEqual(Contract.objects.count(), 1)
 
-        admin = UserFactory(is_staff=True, is_superuser=True)
-        self.set_user(admin)
+        self.set_user(UserFactory(is_staff=True, is_superuser=True))
 
         path = self.get_path(id_detail=contract.id)
 
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
         self.assertEqual(response.data.get('bank'), 'foo')
+
+    def test_get_fail_unauthorized(self):
+        contract = ContractFactory(bank='foo')
+        self.assertEqual(Contract.objects.count(), 1)
+
+        self.set_user(UserFactory())
+
+        path = self.get_path(id_detail=contract.id)
+
+        response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, msg=response.data)
 
     # DELETE
     def test_delete_success(self):
@@ -219,3 +249,15 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         response = self.client.delete(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, msg=response.data)
         self.assertEqual(Contract.objects.count(), 0)
+
+    def test_delete_fail_unauthorized(self):
+        contract = ContractFactory()
+        self.assertEqual(Contract.objects.count(), 1)
+
+        self.set_user(UserFactory())
+
+        path = self.get_path(id_detail=contract.id)
+
+        response = self.client.delete(path, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, msg=response.data)
+        self.assertEqual(Contract.objects.count(), 1)
