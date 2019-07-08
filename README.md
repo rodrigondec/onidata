@@ -35,6 +35,17 @@ Access the [localhost server](http://0.0.0.0:8000) and browse the api.
 
 You may interact with the API via browser or via http request softwares such as [Insomnia](#insomnia-setup)
 
+### Authentication
+`BasicAuthentication`, `SessionAuthentication` and `JWTAuthentication` are enabled on the API.
+
+### JWTAuthentication
+Pass the token following the curl example. If there's some confusion about JWT read about it on [JWT Oficial Documentation](https://jwt.io/) or the lib [drf-simplejwt](https://github.com/davesque/django-rest-framework-simplejwt)
+```bash
+curl \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNDU2LCJqdGkiOiJmZDJmOWQ1ZTFhN2M0MmU4OTQ5MzVlMzYyYmNhOGJjYSJ9.NHlztMGER7UADHZJlxNG0WSi22a2KaYSfd1S-AuT7lU" \
+  http://localhost:8000/api/some-protected-view/
+```
+
 ### Insomnia Setup
 Install Insomnia Rest from the [official website](https://insomnia.rest/download/).
 
