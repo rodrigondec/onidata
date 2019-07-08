@@ -1,8 +1,8 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock
 
 from django.test import TestCase
 
-from core.permissions import IsAuthenticatedOrCreate, IsOwner
+from core.permissions import IsAuthenticatedOrCreate
 
 
 class IsAuthenticatedOrCreateTestCase(TestCase):

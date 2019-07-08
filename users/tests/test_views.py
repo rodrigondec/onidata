@@ -3,9 +3,7 @@ from rest_framework import status
 
 # Project
 from core.test_utils import BaseAPIJWTTestCase
-from contracts.factories import ContractFactory, Contract
 from users.factories import UserFactory, User
-from payments.factories import PaymentFactory, Payment
 
 
 class UsersAPITestCase(BaseAPIJWTTestCase):
