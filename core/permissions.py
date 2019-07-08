@@ -8,7 +8,7 @@ class IsAuthenticatedOrCreate(permissions.IsAuthenticated):
         return super(IsAuthenticatedOrCreate, self).has_permission(request, view)
 
 
-class IsOwnerOrCreate(permissions.BasePermission):
+class IsOwnerOrGetAdminOrCreate(permissions.BasePermission):
     """
     Object-level permission to only allow owners of an object to edit or view it.
     Assumes the model instance has an `owner` attribute.
@@ -16,5 +16,7 @@ class IsOwnerOrCreate(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.method == 'POST':
+            return True
+        elif request.method == 'GET' and request.user.is_superuser:
             return True
         return obj.owner == request.user
