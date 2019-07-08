@@ -22,3 +22,4 @@ setuptools==40.6.3
 
 # Dependencies
 pendulum==2.0.4
+whitenoise==4.1.2
