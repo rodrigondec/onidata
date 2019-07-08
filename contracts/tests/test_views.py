@@ -37,6 +37,7 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         self.assertEqual(Contract.objects.first().interest_rate, 1)
         self.assertEqual(Contract.objects.first().submission_date.isoformat(), '2019-01-01')
         self.assertEqual(Contract.objects.first().ip_address, '127.0.0.1')
+        self.assertEqual(response.data.get('ip_address'), '127.0.0.1')
 
     def test_create_fail(self):
         user = UserFactory()
@@ -205,7 +206,7 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
 
     # GET
     def test_get_success(self):
-        contract = ContractFactory(bank='foo')
+        contract = ContractFactory(bank='foo', ip_address='127.0.0.1')
         self.assertEqual(Contract.objects.count(), 1)
         self.set_user(contract.client)
 
@@ -214,6 +215,7 @@ class ContractsAPITestCase(BaseAPIJWTTestCase):
         response = self.client.get(path, HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK, msg=response.data)
         self.assertEqual(response.data.get('bank'), 'foo')
+        self.assertEqual(response.data.get('ip_address'), '127.0.0.1')
 
     def test_get_admin_success(self):
         contract = ContractFactory(bank='foo')
