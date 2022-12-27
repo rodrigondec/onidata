@@ -18,7 +18,7 @@ factory_boy==2.11.1
 flake8==3.6.0
 
 # Setup tools
-setuptools==40.6.3
+setuptools==65.5.1
 
 # Dependencies
 pendulum==2.0.4
